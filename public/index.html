@@ -4,9 +4,10 @@
     <meta charset="utf-8" />
     <title>Catfood!</title>
     <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fetch/1.0.0/fetch.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/react/15.1.0/react-dom.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.10.3/babel.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
   </head>
@@ -19,6 +20,7 @@
 
       .app {
         text-align: center;
+
         padding: 10px;
 
         position: absolute;
@@ -26,11 +28,18 @@
         right: 0;
         top: 0;
         bottom: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .loading {
+        font-size: 48px;
       }
 
       .meal {
         font-size: 48px;
-
         margin: 20px;
       }
 
@@ -94,23 +103,34 @@
         getInitialState: function() {
           return {
             date: new Date(),
+            loading: true,
             fed: false,
           };
         },
         componentWillMount: function() {
-          setInterval(this.updateApp, 1000);
+          setInterval(this.updateApp, 2000);
+        },
+        clickedFed: function() {
+          fetch('/fed', {
+            method: 'PUT',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ fed: true })
+          })
+          .then(this.updateApp);
         },
         updateApp: function() {
           const nextDate = new Date();
-          const currentMinutes = dateToMinutes(this.state.date);
-          const nextMinutes = dateToMinutes(nextDate);
-          let isFed = this.state.fed;
 
-          if (currentMinutes < morningFeedingTimeOffset && morningFeedingTimeOffset <= nextMinutes || currentMinutes < afternoonFeedingTimeOffset && afternoonFeedingTimeOffset <= nextMinutes) {
-            isFed = false;
-          }
-
-          this.setState({ date: nextDate, fed: isFed });
+          fetch('/fed')
+            .then(function(response) {
+              return response.json();
+            })
+            .then(function(json) {
+              this.setState({ date: nextDate, fed: json.fed, loading: false });
+            }.bind(this));
         },
         meals: function() {
           const currentDay = findDayOfSchedule(this.state.date);
@@ -120,6 +140,22 @@
           } else {
             return weeklySchedule[currentDay % 7];
           }
+        },
+        renderMeal: function(meal) {
+          return (
+            <div>
+              <div className="meal">{meal.name}</div>
+              <button
+                className="button"
+                onClick={this.clickedFed}
+                disabled={this.state.fed}>
+                  Fed
+              </button>
+            </div>
+          );
+        },
+        renderLoading: function() {
+          return (<div className="loading">Loading!</div>);
         },
         render: function() {
           const meals = this.meals();
@@ -132,17 +168,11 @@
             meal = meals[1];
           }
 
-          const backgroundColor = this.state.fed ? '#ececec' : meal.color;
+          const backgroundColor = (this.state.fed || this.state.loading) ? '#ececec' : meal.color;
 
           return (
             <div className="app" style={{background: backgroundColor}}>
-              <div className="meal">{meal.name}</div>
-              <button
-                className="button"
-                onClick={() => this.setState({ fed: true })}
-                disabled={this.state.fed}>
-                  Fed
-              </button>
+              {this.state.loading ? this.renderLoading() : this.renderMeal(meal)}
             </div>
           );
         }
