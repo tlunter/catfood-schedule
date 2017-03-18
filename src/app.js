@@ -12,7 +12,8 @@ const chicken = { name: "Chicken Frick 'Azee", color: "#ffde38" },
       turkey = { name: "Fowl Ball", color: "#a57232" },
       pumpkin = { name:"Funk in the Trunk", color: "#098ed0" },
       lamb = { name: "Lamb Burgini", color: "#17ae15" },
-      salmon = { name: "Goldie Lox", color: "#efaf39" };
+      salmon = { name: "Goldie Lox", color: "#efaf39" },
+      beef = {name: "The Double Dip", color: "#801241" };
 
 const weeklySchedule = [
   [chicken, turkey],
@@ -21,22 +22,42 @@ const weeklySchedule = [
   [chicken, turkey],
   [chicken, chicken],
   [turkey, chicken],
-  [chicken, pumpkin],
+  [chicken, chicken],
 ];
 
 const isThursday = function(date) {
   return date.getDay() == 4;
 };
 
+const isSaturday = function(date) {
+  return date.getDay() == 6;
+};
+
 const thursdayMeals = function(dayOfSchedule) {
   const week = parseInt(dayOfSchedule / 7);
 
-  if (week == 1) {
-    return [lamb, chicken];
+  if (week == 2) {
+    return [beef, chicken];
   } else if (week == 3) {
     return [salmon, chicken];
+  } else if (week == 4) {
+    return [pumpkin, chicken];
   } else {
     return weeklySchedule[4];
+  }
+};
+
+const saturdayMeals = function(dayOfSchedule) {
+  const week = parseInt(dayOfSchedule / 7);
+
+  if (week == 1) {
+    return [chicken, beef];
+  } else if (week == 2) {
+    return [chicken, salmon];
+  } else if (week == 3) {
+    return [chicken, pumpkin];
+  } else {
+    return weeklySchedule[6];
   }
 };
 
@@ -91,6 +112,8 @@ var App = React.createClass({
 
     if (isThursday(this.state.date)) {
       return thursdayMeals(currentDay);
+    } else if (isSaturday(this.state.date)) {
+      return saturdayMeals(currentDay);
     } else {
       return weeklySchedule[currentDay % 7];
     }
