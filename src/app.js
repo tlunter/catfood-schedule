@@ -14,7 +14,7 @@ const chicken = { name: "Chicken Frick 'Azee", color: "#ffde38" },
       lamb = { name: "Lamb Burgini", color: "#17ae15" },
       salmon = { name: "Goldie Lox", color: "#efaf39" },
       beef = {name: "The Double Dip", color: "#801241" },
-      mystery = { name: "Mystery: Choose at Random", color: "#ffffff" };
+      mystery = { name: "Mystery: Choose at Random", color: "linear-gradient(to right top, #FF9999, #FFCC99, #FFFF99, #99FF99, #99CCFF, #9999FF, #CC99FF)" };
 
 const weeklySchedule = [
   [chicken, turkey],
