@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build:js": "NODE_PATH=node_modules:src browserify --extension=jsx src/app.js -o public/app.js",
-    "build:min:js": "npm run build:js && uglifyjs --compress --mangle -o public/app.min.js public/app.js"
+    "build:min:js": "npm run build:js && uglifyjs --compress --mangle -o public/app.min.js public/app.js",
+    "build:docker": "docker build -t catfood-schedule ."
   },
   "dependencies": {
     "body-parser": "^1.15.2",
