@@ -13,7 +13,8 @@ const chicken = { name: "Chicken Frick 'Azee", color: "#ffde38" },
       pumpkin = { name:"Funk in the Trunk", color: "#098ed0" },
       lamb = { name: "Lamb Burgini", color: "#17ae15" },
       salmon = { name: "Goldie Lox", color: "#efaf39" },
-      beef = {name: "The Double Dip", color: "#801241" };
+      beef = {name: "The Double Dip", color: "#801241" },
+      mystery = { name: "Mystery: Choose at Random", color: "#ffffff" };
 
 const weeklySchedule = [
   [chicken, turkey],
@@ -37,11 +38,7 @@ const thursdayMeals = function(dayOfSchedule) {
   const week = parseInt(dayOfSchedule / 7);
 
   if (week == 2) {
-    return [beef, chicken];
-  } else if (week == 3) {
-    return [salmon, chicken];
-  } else if (week == 4) {
-    return [pumpkin, chicken];
+    return [mystery, chicken];
   } else {
     return weeklySchedule[4];
   }
@@ -51,11 +48,7 @@ const saturdayMeals = function(dayOfSchedule) {
   const week = parseInt(dayOfSchedule / 7);
 
   if (week == 1) {
-    return [chicken, beef];
-  } else if (week == 2) {
-    return [chicken, salmon];
-  } else if (week == 3) {
-    return [chicken, pumpkin];
+    return [chicken, mystery];
   } else {
     return weeklySchedule[6];
   }
