@@ -37,7 +37,7 @@ const isSaturday = function(date) {
 const thursdayMeals = function(dayOfSchedule) {
   const week = parseInt(dayOfSchedule / 7);
 
-  if (week == 2) {
+  if (week != 1) {
     return [mystery, chicken];
   } else {
     return weeklySchedule[4];
@@ -47,7 +47,7 @@ const thursdayMeals = function(dayOfSchedule) {
 const saturdayMeals = function(dayOfSchedule) {
   const week = parseInt(dayOfSchedule / 7);
 
-  if (week == 1) {
+  if (week != 4) {
     return [chicken, mystery];
   } else {
     return weeklySchedule[6];
