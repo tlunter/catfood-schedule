@@ -72,6 +72,7 @@ var App = React.createClass({
       date: new Date(),
       loading: true,
       fed: false,
+      success: 0,
     };
   },
   componentWillMount: function() {
@@ -87,18 +88,24 @@ var App = React.createClass({
       },
       body: JSON.stringify({ fed: true })
     })
+    .then(() => this.setState({ success: 3 }))
     .then(this.updateApp);
   },
   updateApp: function() {
     const nextDate = new Date();
 
     fetch('/fed')
-      .then(function(response) {
-        return response.json();
-      })
-      .then(function(json) {
-        this.setState({ date: nextDate, fed: json.fed, loading: false });
-      }.bind(this));
+      .then((response) => response.json())
+      .then((json) => {
+        this.setState((prevState, props) => {
+          return {
+            date: nextDate,
+            fed: json.fed,
+            loading: false,
+            success: (prevState.success > 0) ? prevState.success - 1 : 0
+          };
+        });
+      });
   },
   meals: function() {
     const currentDay = findDayOfSchedule(this.state.date);
@@ -110,6 +117,16 @@ var App = React.createClass({
     } else {
       return weeklySchedule[currentDay % 7];
     }
+  },
+  renderSuccess: function(mark) {
+    const opacity = this.state.success > 0 ? 1 : 0;
+    return (
+      <div
+        className="success"
+        style={{opacity: opacity}}>
+        Success!
+      </div>
+    );
   },
   renderMeal: function(meal) {
     return (
@@ -142,7 +159,9 @@ var App = React.createClass({
     const filter = this.state.fed ? 'grayscale(75%)' : '';
 
     return (
-      <div className="app" style={{background: backgroundColor, filter: filter}}>
+      <div className="app">
+        <div className="background"  style={{background: backgroundColor, filter: filter}} />
+        {this.renderSuccess()}
         {this.state.loading ? this.renderLoading() : this.renderMeal(meal)}
       </div>
     );
