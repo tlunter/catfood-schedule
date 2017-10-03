@@ -138,10 +138,11 @@ var App = React.createClass({
       meal = meals[1];
     }
 
-    const backgroundColor = (this.state.fed || this.state.loading) ? '#ececec' : meal.color;
+    const backgroundColor = (this.state.loading) ? '#ececec' : meal.color;
+    const filter = this.state.fed ? 'grayscale(75%)' : '';
 
     return (
-      <div className="app" style={{background: backgroundColor}}>
+      <div className="app" style={{background: backgroundColor, filter: filter}}>
         {this.state.loading ? this.renderLoading() : this.renderMeal(meal)}
       </div>
     );
