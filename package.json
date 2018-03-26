@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "watch:js": "NODE_PATH=node_modules:src watchify --extension=jsx src/app.js -o public/app.js -dv",
     "build:js": "NODE_PATH=node_modules:src browserify --extension=jsx src/app.js -o public/app.js",
     "build:min:js": "npm run build:js && uglifyjs --compress --mangle -o public/app.min.js public/app.js",
     "build:docker": "docker build -t catfood-schedule ."
@@ -19,7 +20,8 @@
     "browserify": "^11.2.0",
     "react": "^0.14.1",
     "react-dom": "^0.14.1",
-    "uglify-js": "^2.7.5"
+    "uglify-js": "^2.7.5",
+    "watchify": "^3.9.0"
   },
   "browserify": {
     "transform": [

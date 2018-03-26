@@ -16,6 +16,16 @@ const chicken = { name: "Chicken Frick 'Azee", color: "#ffde38" },
       beef = {name: "The Double Dip", color: "#801241" },
       mystery = { name: "Mystery: Choose at Random", color: "linear-gradient(to right top, #FF9999, #FFCC99, #FFFF99, #99FF99, #99CCFF, #9999FF, #CC99FF)" };
 
+const dayOfWeek = [
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
+];
+
 const weeklySchedule = [
   [chicken, turkey],
   [chicken, chicken],
@@ -128,15 +138,18 @@ var App = React.createClass({
       </div>
     );
   },
-  renderMeal: function(meal) {
+  renderMeal: function(meal, mealGroup) {
+    const dow = dayOfWeek[this.state.date.getDay()];
+    const mealType = (mealGroup === 'morning') ? 'Breakfast' : 'Dinner';
     return (
       <div>
-        <div className="meal">{meal.name}</div>
+        <div className="mealType">{dow} {mealType}</div>
+        <div className="meal">{meal.name} - Free</div>
         <button
           className="button"
           onClick={this.clickedFed}
           disabled={this.state.fed}>
-            Fed
+            Fed{this.state.fed ? '!' : '?'}
         </button>
       </div>
     );
@@ -147,11 +160,13 @@ var App = React.createClass({
   render: function() {
     const meals = this.meals();
     const currentMinutes = dateToMinutes(this.state.date);
-    let meal;
+    let meal, mealGroup;
 
     if (currentMinutes <= morningFeedingTimeOffset || currentMinutes < afternoonFeedingTimeOffset) {
+      mealGroup = 'morning';
       meal = meals[0];
     } else {
+      mealGroup = 'evening';
       meal = meals[1];
     }
 
@@ -162,7 +177,7 @@ var App = React.createClass({
       <div className="app">
         <div className="background"  style={{background: backgroundColor, filter: filter}} />
         {this.renderSuccess()}
-        {this.state.loading ? this.renderLoading() : this.renderMeal(meal)}
+        {this.state.loading ? this.renderLoading() : this.renderMeal(meal, mealGroup)}
       </div>
     );
   }
